@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">WebBrowserBedon</string>
+    <string name="hintDirection">http://www.</string>
+    <string name="BtnName">GO!</string>
+</resources>
