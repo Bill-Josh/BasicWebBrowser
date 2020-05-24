@@ -1,4 +1,5 @@
 # BasicWebBrowser
+Android Studio Java
 Trying to make a Web Browser App with Rotation and fixing the reset from the website after a rotation.
 
 First, I am trying to make it rotate from Vertical to Landscape without the WebView Reloading the website already loaded.
