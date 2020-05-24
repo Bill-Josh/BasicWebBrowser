@@ -33,7 +33,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         wbView.setWebViewClient(new WebViewClient());
 
         //Leer y abrir Javascript
-        wbView.getSettings().setJavaScriptEnabled(true);
+        //wbView.getSettings().setJavaScriptEnabled(true);
 
         //Ajustar en pantalla completa
         wbView.getSettings().getLoadWithOverviewMode();
