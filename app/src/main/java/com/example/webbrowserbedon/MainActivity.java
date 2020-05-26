@@ -1,7 +1,7 @@
 package com.example.webbrowserbedon;
 
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.net.ConnectivityManager;
@@ -12,6 +12,8 @@ import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private WebView wbView;
     private String url;
     private ProgressBar progressBar;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +39,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         bntGo = findViewById(R.id.btnGo);
         wbView = findViewById(R.id.wbView);
         progressBar = findViewById(R.id.progressbar);
+        swipeRefreshLayout = findViewById(R.id.webViewReload);
 
         bntGo.setOnClickListener(this);
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                wbView.reload();
+            }
+        });
+
 
         //Visualizar el WebView
-        wbView.setWebViewClient(new Browser_Home());
+        wbView.setWebViewClient(new Browser_Home(swipeRefreshLayout));
         wbView.setWebChromeClient(new ChromeClient());
         WebSettings webSettings = wbView.getSettings();
         webSettings.setJavaScriptEnabled(true);
@@ -103,10 +114,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private class Browser_Home extends WebViewClient {
         Browser_Home(){}
 
+        SwipeRefreshLayout swipeRefreshLayout;
+
+        public Browser_Home(SwipeRefreshLayout swipeRefreshLayout) {
+            this.swipeRefreshLayout = swipeRefreshLayout;
+        }
+
+        @Override
+        public void onReceivedError(WebView view, WebResourceRequest request, WebResourceError error){
+            super.onReceivedError(view, request, error);
+        }
+
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
             progressBar.setVisibility(View.VISIBLE);
             super.onPageStarted(view, url, favicon);
+            swipeRefreshLayout.setRefreshing(true);
         }
 
         @Override
@@ -114,6 +137,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             setTitle(view.getTitle());
             progressBar.setVisibility(View.GONE);
             super.onPageFinished(view, url);
+            swipeRefreshLayout.setRefreshing(false);
         }
     }
 

@@ -34,8 +34,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <WebView
-        android:id="@+id/wbView"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/webViewReload"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
@@ -47,14 +47,25 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etxtURL" />
+        app:layout_constraintTop_toBottomOf="@+id/etxtURL">
 
-    <ProgressBar
-        android:id="@+id/progressbar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="@+id/wbView"
-        app:layout_constraintEnd_toEndOf="@+id/wbView"
-        app:layout_constraintStart_toStartOf="@+id/wbView"
-        app:layout_constraintTop_toTopOf="@+id/wbView" />
+        <WebView
+            android:id="@+id/wbView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintBottom_toBottomOf="@+id/webViewReload"
+            app:layout_constraintEnd_toEndOf="@+id/webViewReload"
+            app:layout_constraintStart_toStartOf="@+id/webViewReload"
+            app:layout_constraintTop_toTopOf="@+id/webViewReload" />
+
+        <ProgressBar
+            android:id="@+id/progressbar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="@+id/wbView"
+            app:layout_constraintEnd_toEndOf="@+id/wbView"
+            app:layout_constraintStart_toStartOf="@+id/wbView"
+            app:layout_constraintTop_toTopOf="@+id/wbView" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
