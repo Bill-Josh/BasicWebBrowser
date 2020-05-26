@@ -3,11 +3,13 @@ package com.example.webbrowserbedon;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
@@ -52,13 +54,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         wbView.getSettings().getLoadWithOverviewMode();
         wbView.getSettings().setUseWideViewPort(true);
 
+        //InstanceTEST
+        if(savedInstanceState == null) {
+            wbView.post(new Runnable() {
+                @Override
+                public void run() {
+                    loadWebSite();
+                }
+            });
+        }
     }
 
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        wbView.saveState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState){
+        super.onRestoreInstanceState(savedInstanceState);
+        wbView.restoreState(savedInstanceState);
+    }
+
+    //Loads the Default website.
     private void loadWebSite() {
         ConnectivityManager cm = (ConnectivityManager) getApplication().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo netInfo = cm.getActiveNetworkInfo();
         if (netInfo != null && netInfo.isConnectedOrConnecting()) {
-            wbView.loadUrl("http://www.google.com"); //Cargar URL Predeterminada
+            progressBar.setVisibility(View.VISIBLE);
+            wbView.loadUrl("https://www.youtube.com"); //Cargar URL Predeterminada
         } else{
             wbView.setVisibility(View.GONE);
         }
@@ -75,6 +105,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void onPageStarted(WebView view, String url, Bitmap favicon) {
+            progressBar.setVisibility(View.VISIBLE);
             super.onPageStarted(view, url, favicon);
         }
 
@@ -84,6 +115,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             progressBar.setVisibility(View.GONE);
             super.onPageFinished(view, url);
         }
+    }
+
+    //Impedir que el botón Atrás cierre la aplicación
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        wbView = findViewById(R.id.wbView);
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            switch (keyCode) {
+                case KeyEvent.KEYCODE_BACK:
+                    if (wbView.canGoBack()) {
+                        wbView.goBack();
+                    } else {
+                        finish();
+                    }
+                    return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     private class ChromeClient extends WebChromeClient {
